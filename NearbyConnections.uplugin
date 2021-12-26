@@ -1,24 +1,25 @@
 {
 	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0",
+	"Version": 2000000,
+	"VersionName": "1.0.0",
 	"FriendlyName": "NearbyConnections",
-	"Description": "Use Google Nearby Connections API",
-	"Category": "Other",
-	"CreatedBy": "Nineva Studio",
-	"CreatedByURL": "",
-	"DocsURL": "",
-	"MarketplaceURL": "",
-	"SupportURL": "",
+	"Description": "Google Nearby Connections API plugin for Unreal Engine",
+	"Category": "Code Plugins",
+	"CreatedBy": "Nineva Studios",
+	"CreatedByURL": "https://ninevastudios.com/",
+	"DocsURL": "https://docs.ninevastudios.com/#/ue-plugins/google-play-unreal",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/ed6dc1c7026b4e3fbcbacf51298b17a0",
+	"EngineVersion": "4.25.0",
+	"SupportURL": "mailto:support@ninevastudios.com",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
-	"IsExperimentalVersion": false,
-	"Installed": false,
+	"Installed": true,
 	"Modules": [
 		{
 			"Name": "NearbyConnections",
 			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [ "Win64", "Win32", "Mac", "Android" ]
 		}
 	]
 }
