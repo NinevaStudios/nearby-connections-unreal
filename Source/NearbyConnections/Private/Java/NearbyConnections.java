@@ -53,17 +53,17 @@ public class NearbyConnections {
 	static ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
 		@Override
 		public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
-			onConnectionInitiated(endpointId, connectionInfo);
+			NearbyConnections.onConnectionInitiated(endpointId, connectionInfo);
 		}
 
 		@Override
 		public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution connectionResolution) {
-			onConnectionResult(endpointId, connectionResolution);
+			NearbyConnections.onConnectionResult(endpointId, connectionResolution);
 		}
 
 		@Override
 		public void onDisconnected(@NonNull String endpointId) {
-			onDisconnected(endpointId);
+			NearbyConnections.onDisconnected(endpointId);
 		}
 	};
 }
