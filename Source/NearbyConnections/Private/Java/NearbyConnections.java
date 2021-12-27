@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -23,7 +24,7 @@ public class NearbyConnections {
 	public static native void onStartAdvertisingError(String error);
 
 	public static native void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo);
-	public static native void onConnectionResult(String endpointId, ConnectionResolution connectionResolution);
+	public static native void onConnectionResult(String endpointId, int statusCode, String message);
 	public static native void onDisconnected(String endpointId);
 
 	public static void startAdvertising(Activity context, int strategyInt, String userName, String serviceId) {
@@ -58,7 +59,8 @@ public class NearbyConnections {
 
 		@Override
 		public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution connectionResolution) {
-			NearbyConnections.onConnectionResult(endpointId, connectionResolution);
+			Status status = connectionResolution.getStatus();
+			NearbyConnections.onConnectionResult(endpointId, status.getStatusCode(), status.getStatusMessage());
 		}
 
 		@Override
