@@ -12,6 +12,33 @@
     <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/ninevastudios/nearbyconnections" />
   </prebuildCopies>
 
+  <!-- optional updates applied to AndroidManifest.xml -->
+  <androidManifestUpdates>
+    <addPermission android:name="android.permission.BLUETOOTH"/>
+    <addPermission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <addPermission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <addPermission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <addPermission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <addPermission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <addPermission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+    <addPermission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <addPermission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <!--TODO: add only if file transfer is required-->
+    <addPermission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  </androidManifestUpdates>
+
+  <buildGradleAdditions>
+    <insert>
+      dependencies {
+        implementation 'com.google.android.gms:play-services-nearby:18.0.1'
+      }
+      repositories {
+        google()
+        mavenCentral()
+      }
+    </insert>
+  </buildGradleAdditions>
+
   <gradleProperties>
     <insert>
       android.useAndroidX=true
