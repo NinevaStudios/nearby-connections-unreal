@@ -1,6 +1,6 @@
 // Copyright (c) 2022 Nineva Studios
 
-#include "ConnectionInfo.h"
+#include "NCPayload.h"
 
 #include "NearbyConnectionsLog.h"
 
@@ -9,7 +9,7 @@
 #include "Android/Utils/NCMethodCallUtils.h"
 #endif
 
-UNCConnectionInfo::~UNCConnectionInfo()
+UNCPayload::~UNCPayload()
 {
 	if (!IsNativeObjectValid())
 	{
@@ -23,7 +23,7 @@ UNCConnectionInfo::~UNCConnectionInfo()
 #endif
 }
 
-bool UNCConnectionInfo::IsNativeObjectValid()
+bool UNCPayload::IsNativeObjectValid()
 {
 	bool Result = false;
 

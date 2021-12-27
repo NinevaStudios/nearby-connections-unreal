@@ -8,7 +8,7 @@
 #include "Android/AndroidJNI.h"
 #endif
 
-#include "ConnectionInfo.generated.h"
+#include "NCConnectionInfo.generated.h"
 
 UCLASS(BlueprintType)
 class UNCConnectionInfo : public UObject

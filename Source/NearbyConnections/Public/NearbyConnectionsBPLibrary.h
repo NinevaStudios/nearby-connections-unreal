@@ -28,7 +28,26 @@ struct FNCConnectionOptions
 	bool IsDisruptiveUpgrade = false;
 };
 
+USTRUCT(BlueprintType)
+struct FNCPayloadTransferUpdate
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	int64 PayloadId;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	int Status;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	int64 TotalBytes;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	int64 TransferredBytes;
+};
+
 class UNCConnectionInfo;
+class UNCPayload;
 
 DECLARE_DYNAMIC_DELEGATE(FNCVoidDelegate);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FNCStringDelegate, FString, String);
@@ -38,6 +57,9 @@ DECLARE_DYNAMIC_DELEGATE_ThreeParams(FNCConnectionResultDelegate, FString, Endpo
 
 DECLARE_DYNAMIC_DELEGATE_FourParams(FNCEndpointFoundDelegate, FString, EndpointId, FString, ServiceId, FString, EndpointName, const TArray<uint8>&, EndpointInfo);
 
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FNCPayloadReceivedDelegate, FString, EndpointId, UNCPayload*, Payload);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FNCPayloadTransferUpdateDelegate, FString, EndpointId, const FNCPayloadTransferUpdate&, PayloadTransferUpdate);
+
 UCLASS()
 class UNearbyConnectionsBPLibrary : public UBlueprintFunctionLibrary
 {
@@ -46,12 +68,40 @@ class UNearbyConnectionsBPLibrary : public UBlueprintFunctionLibrary
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
-	static void StartAdvertising(const FNCConnectionOptions Options, const FString& UserName, const FString& ServiceId,
-		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+	static void StartAdvertising(const FNCConnectionOptions& Options, const FString& UserName, const FString& ServiceId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void StopAdvertising();
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
-	static void StartDiscovery(const FNCConnectionOptions Options, const FString& ServiceId,
-		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+	static void StartDiscovery(const FNCConnectionOptions& Options, const FString& ServiceId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void StopDiscovery();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void StopAllEndpoints();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void AcceptConnection(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void CancelPayload(int64 PayloadId);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void DisconnectFromEndpoint(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void RejectConnection(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void RequestConnectionByName(const FString& Name, const FString& EndpointId, const FNCConnectionOptions& Options, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void RequestConnection(const TArray<uint8>& EndpointInfo, const FString& EndpointId, const FNCConnectionOptions& Options, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
+	static void SendPayload(UNCPayload* Payload, const TArray<FString>& Endpoints, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
 	static void BindConnectionDelegates(const FNCConnectionInitiatedDelegate& OnConnectionInitiatedCallback, const FNCConnectionResultDelegate& OnConnectionResultCallback,
@@ -69,6 +119,13 @@ public:
 		OnEndpointLost = OnEndpointLostCallback;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void BindPayloadDelegates(const FNCPayloadReceivedDelegate& OnPayloadReceivedCallback, const FNCPayloadTransferUpdateDelegate& OnPayloadTransferUpdateCallback)
+	{
+		OnPayloadReceived = OnPayloadReceivedCallback;
+		OnPayloadTransferUpdate = OnPayloadTransferUpdateCallback;
+	}
+
 	static FNCVoidDelegate OnStartAdvertisingSuccess;
 	static FNCStringDelegate OnStartAdvertisingError;
 	
@@ -81,4 +138,22 @@ public:
 
 	static FNCEndpointFoundDelegate OnEndpointFound;
 	static FNCStringDelegate OnEndpointLost;
+
+	static FNCPayloadReceivedDelegate OnPayloadReceived;
+	static FNCPayloadTransferUpdateDelegate OnPayloadTransferUpdate;
+
+	static FNCVoidDelegate OnAcceptConnectionSuccess;
+	static FNCStringDelegate OnAcceptConnectionError;
+	
+	static FNCVoidDelegate OnDisconnectFromEndpointSuccess;
+	static FNCStringDelegate OnDisconnectFromEndpointError;
+	
+	static FNCVoidDelegate OnRejectConnectionSuccess;
+	static FNCStringDelegate OnRejectConnectionError;
+	
+	static FNCVoidDelegate OnRequestConnectionSuccess;
+	static FNCStringDelegate OnRequestConnectionError;
+	
+	static FNCVoidDelegate OnSendPayloadSuccess;
+	static FNCStringDelegate OnSendPayloadError;
 };
