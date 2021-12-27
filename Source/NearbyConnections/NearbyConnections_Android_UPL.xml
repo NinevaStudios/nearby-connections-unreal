@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    // Copyright (c) 2022 Nineva Studios
+-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <init>
+    <log text="[NearbyConnections] Android UPL initialization"/>
+  </init>
+
+  <prebuildCopies>
+    <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/ninevastudios/nearbyconnections" />
+  </prebuildCopies>
+
+  <gradleProperties>
+    <insert>
+      android.useAndroidX=true
+      android.enableJetifier=true
+    </insert>
+  </gradleProperties>
+
+  <!-- optional additions to proguard -->
+  <proguardAdditions>
+    <insert>
+      -dontwarn com.ninevastudios.**
+      -keep class com.ninevastudios.** { *; }
+      -keep interface com.ninevastudios.** { *; }
+
+      -keep class com.google.android.gms.nearby.** { *; }
+      -keep interface com.google.android.gms.nearby.** { *; }
+    </insert>
+  </proguardAdditions>
+
+  <baseBuildGradleAdditions>
+    <insert>
+      allprojects {
+        def mappings = [
+          'android.support.annotation': 'androidx.annotation',
+          'android.arch.lifecycle': 'androidx.lifecycle',
+          'android.support.v4.app.NotificationCompat': 'androidx.core.app.NotificationCompat',
+          'android.support.v4.app.ActivityCompat': 'androidx.core.app.ActivityCompat',
+          'android.support.v4.content.ContextCompat': 'androidx.core.content.ContextCompat',
+          'android.support.v4.app.NotificationManagerCompat': 'androidx.core.app.NotificationManagerCompat',
+          'android.support.v4.content.FileProvider': 'androidx.core.content.FileProvider',
+          'android.support.v13.app.FragmentCompat': 'androidx.legacy.app.FragmentCompat',
+          'android.arch.lifecycle.Lifecycle': 'androidx.lifecycle.Lifecycle',
+          'android.arch.lifecycle.LifecycleObserver': 'androidx.lifecycle.LifecycleObserver',
+          'android.arch.lifecycle.OnLifecycleEvent': 'androidx.lifecycle.OnLifecycleEvent',
+          'android.arch.lifecycle.ProcessLifecycleOwner': 'androidx.lifecycle.ProcessLifecycleOwner',
+        ]
+
+        beforeEvaluate { project ->
+          project.rootProject.projectDir.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.java$/) { f ->
+            mappings.each { entry ->
+              if (f.getText('UTF-8').contains(entry.key)) {
+                println "Updating ${entry.key} to ${entry.value} in file ${f}"
+                ant.replace(file: f, token: entry.key, value: entry.value)
+              }
+            }
+          }
+        }
+      }
+    </insert>
+  </baseBuildGradleAdditions>
+
+</root>
