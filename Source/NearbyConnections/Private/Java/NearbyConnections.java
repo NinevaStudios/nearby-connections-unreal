@@ -16,9 +16,15 @@ import com.google.android.gms.nearby.connection.ConnectionResolution;
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
 import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
+import com.google.android.gms.nearby.connection.Payload;
+import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.Arrays;
+
+@SuppressWarnings("unused")
 public class NearbyConnections {
 	private static final String TAG = "NearbyConnections";
 
@@ -34,6 +40,18 @@ public class NearbyConnections {
 
 	public static native void onEndpointFound(String endpointId, String serviceId, String endpointName, byte[] endpointInfo);
 	public static native void onEndpointLost(String endpointId);
+
+	public static native void onAcceptConnectionSuccess();
+	public static native void onAcceptConnectionError(String error);
+
+	public static native void onPayloadReceived(String endpointId, Payload payload);
+	public static native void onPayloadTransferUpdate(String endpointId, PayloadTransferUpdate payloadTransferUpdate);
+
+	public static native void onRequestConnectionSuccess();
+	public static native void onRequestConnectionError(String error);
+
+	public static native void onSendPayloadSuccess();
+	public static native void onSendPayloadError(String error);
 
 	public static void startAdvertising(Activity context, Options options, String userName, String serviceId) {
 		AdvertisingOptions advertisingOptions = options.toAdvertisingOptions();
@@ -58,10 +76,14 @@ public class NearbyConnections {
 				});
 	}
 
+	public static void stopAdvertising(Activity context) {
+		Nearby.getConnectionsClient(context).stopAdvertising();
+	}
+
 	public static void startDiscovery(Activity context, Options options, String serviceId) {
 		DiscoveryOptions discoveryOptions = options.toDiscoveryOptions();
 		if (discoveryOptions == null) {
-			Log.e(TAG, "Wrong strategy passed to startAdvertising. Aborting operation.");
+			Log.e(TAG, "Wrong strategy passed to startDiscovery. Aborting operation.");
 			return;
 		}
 
@@ -77,6 +99,102 @@ public class NearbyConnections {
 					@Override
 					public void onFailure(@NonNull Exception e) {
 						onStartDiscoveryError(e.getMessage());
+					}
+				});
+	}
+
+	public static void stopDiscovery(Activity context) {
+		Nearby.getConnectionsClient(context).stopDiscovery();
+	}
+
+	public static void stopAllEndpoints(Activity context) {
+		Nearby.getConnectionsClient(context).stopAllEndpoints();
+	}
+
+	public static void acceptConnection(Activity context, String endpointId) {
+		Nearby.getConnectionsClient(context).acceptConnection(endpointId, mPayloadCallback)
+				.addOnSuccessListener(new OnSuccessListener<Void>() {
+					@Override
+					public void onSuccess(@NonNull Void unused) {
+						onAcceptConnectionSuccess();
+					}
+				})
+				.addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						onAcceptConnectionError(e.getMessage());
+					}
+				});
+	}
+
+	public static void cancelPayload(Activity context, long payloadId) {
+		Nearby.getConnectionsClient(context).cancelPayload(payloadId);
+	}
+
+	public static void disconnectFromEndpoint(Activity context, String endpointId) {
+		Nearby.getConnectionsClient(context).disconnectFromEndpoint(endpointId);
+	}
+
+	public static void rejectConnection(Activity context, String endpointId) {
+		Nearby.getConnectionsClient(context).rejectConnection(endpointId)
+				.addOnSuccessListener(new OnSuccessListener<Void>() {
+					@Override
+					public void onSuccess(@NonNull Void unused) {
+						onAcceptConnectionSuccess();
+					}
+				})
+				.addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						onAcceptConnectionError(e.getMessage());
+					}
+				});
+	}
+
+	public static void requestConnection(Activity context, String name, String endpointId, Options options) {
+		Nearby.getConnectionsClient(context).requestConnection(name, endpointId, mConnectionLifecycleCallback, options.toConnectionOptions())
+				.addOnSuccessListener(new OnSuccessListener<Void>() {
+					@Override
+					public void onSuccess(@NonNull Void unused) {
+						onRequestConnectionSuccess();
+					}
+				})
+				.addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						onRequestConnectionError(e.getMessage());
+					}
+				});
+	}
+
+	public static void requestConnection(Activity context, byte[] endpointInfo, String endpointId, Options options) {
+		Nearby.getConnectionsClient(context).requestConnection(endpointInfo, endpointId, mConnectionLifecycleCallback, options.toConnectionOptions())
+				.addOnSuccessListener(new OnSuccessListener<Void>() {
+					@Override
+					public void onSuccess(@NonNull Void unused) {
+						onRequestConnectionSuccess();
+					}
+				})
+				.addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						onRequestConnectionError(e.getMessage());
+					}
+				});
+	}
+
+	public static void sendPayload(Activity context, Payload payload, String[] endpoints) {
+		Nearby.getConnectionsClient(context).sendPayload(Arrays.asList(endpoints), payload)
+				.addOnSuccessListener(new OnSuccessListener<Void>() {
+					@Override
+					public void onSuccess(@NonNull Void unused) {
+						onSendPayloadSuccess();
+					}
+				})
+				.addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						onSendPayloadError(e.getMessage());
 					}
 				});
 	}
@@ -112,6 +230,18 @@ public class NearbyConnections {
 		@Override
 		public void onEndpointLost(@NonNull String endpointId) {
 			NearbyConnections.onEndpointLost(endpointId);
+		}
+	};
+
+	static PayloadCallback mPayloadCallback = new PayloadCallback() {
+		@Override
+		public void onPayloadReceived(@NonNull String endpointId, @NonNull Payload payload) {
+			NearbyConnections.onPayloadReceived(endpointId, payload);
+		}
+
+		@Override
+		public void onPayloadTransferUpdate(@NonNull String endpointId, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
+			NearbyConnections.onPayloadTransferUpdate(endpointId, payloadTransferUpdate);
 		}
 	};
 }

@@ -1,6 +1,7 @@
 package com.ninevastudios.nearbyconnections;
 
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.ConnectionOptions;
 import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.Strategy;
 
@@ -34,6 +35,13 @@ public class Options {
 		return new DiscoveryOptions.Builder()
 				.setStrategy(strategy)
 				.setLowPower(isLowPower)
+				.build();
+	}
+
+	public ConnectionOptions toConnectionOptions() {
+		return new ConnectionOptions.Builder()
+				.setLowPower(isLowPower)
+				.setDisruptiveUpgrade(isDisruptiveUpgrade)
 				.build();
 	}
 }
