@@ -40,6 +40,8 @@ FNCStringDelegate UNearbyConnectionsBPLibrary::OnRequestConnectionError;
 FNCVoidDelegate UNearbyConnectionsBPLibrary::OnSendPayloadSuccess;
 FNCStringDelegate UNearbyConnectionsBPLibrary::OnSendPayloadError;
 
+const ANSICHAR* UNearbyConnectionsBPLibrary::NearbyConnectionsClassName = "com/ninevastudios/nearbyconnections/NearbyConnections";
+
 void UNearbyConnectionsBPLibrary::StartAdvertising(const FNCConnectionOptions& Options, const FString& UserName, const FString& ServiceId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
 	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StartAdvertising"));
@@ -48,7 +50,9 @@ void UNearbyConnectionsBPLibrary::StartAdvertising(const FNCConnectionOptions& O
 	OnStartAdvertisingError = OnError;
 
 #if PLATFORM_ANDROID
-
+	jobject JavaOptions = NCConversionUtils::ToJavaOptions(Options);
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "startAdvertising", "(Landroid/app/Activity;Lcom/ninevastudios/nearbyconnections/Options;Ljava/lang/String;Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, JavaOptions, NCConversionUtils::GetJavaString(UserName), NCConversionUtils::GetJavaString(ServiceId));
 #endif
 }
 
@@ -57,7 +61,7 @@ void UNearbyConnectionsBPLibrary::StopAdvertising()
 	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopAdvertising"));
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "stopAdvertising", "(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
 
@@ -69,7 +73,9 @@ void UNearbyConnectionsBPLibrary::StartDiscovery(const FNCConnectionOptions& Opt
 	OnStartDiscoveryError = OnError;
 
 #if PLATFORM_ANDROID
-
+	jobject JavaOptions = NCConversionUtils::ToJavaOptions(Options);
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "startDiscovery", "(Landroid/app/Activity;Lcom/ninevastudios/nearbyconnections/Options;Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, JavaOptions, NCConversionUtils::GetJavaString(ServiceId));
 #endif
 }
 
@@ -78,7 +84,7 @@ void UNearbyConnectionsBPLibrary::StopDiscovery()
 	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopDiscovery"));
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "stopDiscovery", "(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
 
@@ -87,7 +93,7 @@ void UNearbyConnectionsBPLibrary::StopAllEndpoints()
 	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopAllEndpoints"));
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "stopAllEndpoints", "(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
 
@@ -99,7 +105,8 @@ void UNearbyConnectionsBPLibrary::AcceptConnection(const FString& EndpointId, co
 	OnAcceptConnectionError = OnError;
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "acceptConnection", "(Landroid/app/Activity;Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, NCConversionUtils::GetJavaString(EndpointId));
 #endif
 }
 
@@ -108,7 +115,8 @@ void UNearbyConnectionsBPLibrary::CancelPayload(int64 PayloadId)
 	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::CancelPayload"));
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "cancelPayload", "(Landroid/app/Activity;J)V",
+		FJavaWrapper::GameActivityThis, PayloadId);
 #endif
 }
 
@@ -120,7 +128,8 @@ void UNearbyConnectionsBPLibrary::DisconnectFromEndpoint(const FString& Endpoint
 	OnDisconnectFromEndpointError = OnError;
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "disconnectFromEndpoint", "(Landroid/app/Activity;Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, NCConversionUtils::GetJavaString(EndpointId));
 #endif
 }
 
@@ -132,7 +141,8 @@ void UNearbyConnectionsBPLibrary::RejectConnection(const FString& EndpointId, co
 	OnRejectConnectionError = OnError;
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "rejectConnection", "(Landroid/app/Activity;Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, NCConversionUtils::GetJavaString(EndpointId));
 #endif
 }
 
@@ -144,7 +154,9 @@ void UNearbyConnectionsBPLibrary::RequestConnectionByName(const FString& Name, c
 	OnRequestConnectionError = OnError;
 
 #if PLATFORM_ANDROID
-
+	jobject JavaOptions = NCConversionUtils::ToJavaOptions(Options);
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "requestConnection", "(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;Lcom/ninevastudios/nearbyconnections/Options;)V",
+		FJavaWrapper::GameActivityThis, NCConversionUtils::GetJavaString(Name), NCConversionUtils::GetJavaString(EndpointId), JavaOptions);
 #endif
 }
 
@@ -156,7 +168,9 @@ void UNearbyConnectionsBPLibrary::RequestConnection(const TArray<uint8>& Endpoin
 	OnRequestConnectionError = OnError;
 
 #if PLATFORM_ANDROID
-
+	jobject JavaOptions = NCConversionUtils::ToJavaOptions(Options);
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "requestConnection", "(Landroid/app/Activity;[BLjava/lang/String;Lcom/ninevastudios/nearbyconnections/Options;)V",
+		FJavaWrapper::GameActivityThis, NCConversionUtils::ConvertToJByteArray(EndpointInfo), NCConversionUtils::GetJavaString(EndpointId), JavaOptions);
 #endif
 }
 
@@ -168,6 +182,7 @@ void UNearbyConnectionsBPLibrary::SendPayload(UNCPayload* Payload, const TArray<
 	OnSendPayloadError = OnError;
 
 #if PLATFORM_ANDROID
-
+	NCMethodCallUtils::CallStaticVoidMethod(NearbyConnectionsClassName, "sendPayload", "(Landroid/app/Activity;Lcom/google/android/gms/nearby/connection/Payload;[Ljava/lang/String;)V",
+		FJavaWrapper::GameActivityThis, Payload->JavaObject, NCConversionUtils::ToJavaStringArray(Endpoints));
 #endif
 }

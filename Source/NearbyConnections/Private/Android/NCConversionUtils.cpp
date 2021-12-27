@@ -40,6 +40,38 @@ TArray<uint8> NCConversionUtils::ConvertToByteArray(jbyteArray javaArray)
 	return byteArray;
 }
 
+jobjectArray NCConversionUtils::ToJavaStringArray(const TArray<FString>& StringArray)
+{
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	jobjectArray JStringArray = (jobjectArray)Env->NewObjectArray(StringArray.Num(), FJavaWrapper::JavaStringClass, nullptr);
+
+	for (int i = 0; i < StringArray.Num(); i++)
+	{
+		auto JString = FJavaClassObject::GetJString(StringArray[i]);
+		Env->SetObjectArrayElement(JStringArray, i, *JString);
+	}
+
+	return JStringArray;
+}
+
+TArray<FString> NCConversionUtils::ConvertToStringArray(jobjectArray javaStringArray)
+{
+	TArray<FString> stringArray;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	int length = Env->GetArrayLength(javaStringArray);
+
+	for (int i = 0; i < length; i++)
+	{
+		jstring javaString = static_cast<jstring>(Env->GetObjectArrayElement(javaStringArray, i));
+
+		stringArray.Add(FromJavaString(javaString));
+	}
+
+	return stringArray;
+}
+
 jstring NCConversionUtils::GetJavaString(FString string)
 {
 	JNIEnv* JEnv = AndroidJavaEnv::GetJavaEnv();
@@ -58,4 +90,13 @@ FString NCConversionUtils::FromJavaString(jstring javaString)
 	Env->DeleteLocalRef(javaString);
 
 	return Result;
+}
+
+jobject ToJavaOptions(const FNCConnectionOptions& Options)
+{
+	JNIEnv* JEnv = AndroidJavaEnv::GetJavaEnv();
+
+	jclass OptionsClass = FJavaWrapper::FindClass(Env, "com/ninevastudios/nearbyconnections/Options", false);
+	jmethodID OptionsCtor = FJavaWrapper::FindMethod(Env, OptionsClass, "<init>", "(IZZ)V", false);
+	return Env->NewObject(OptionsClass, OptionsCtor, (int) Options.Strategy, Options.IsLowPower, Options.IsDisruptiveUpgrade);
 }

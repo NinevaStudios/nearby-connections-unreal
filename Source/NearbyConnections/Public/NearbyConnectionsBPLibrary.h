@@ -156,4 +156,6 @@ public:
 	
 	static FNCVoidDelegate OnSendPayloadSuccess;
 	static FNCStringDelegate OnSendPayloadError;
+
+	static const ANSICHAR* NearbyConnectionsClassName;
 };
