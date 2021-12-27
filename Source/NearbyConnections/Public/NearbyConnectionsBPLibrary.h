@@ -14,7 +14,7 @@ enum class ENCStrategy : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FNearbyConnectionOptions
+struct FNCConnectionOptions
 {
 	GENERATED_BODY()
 
@@ -22,13 +22,10 @@ struct FNearbyConnectionOptions
 	ENCStrategy Strategy;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
-	bool IsLowPower;
+	bool IsLowPower = false;
 
-	/// <summary>
-	/// Used only for StartAdvertising, ignored in StartDiscovery.
-	/// </summary>
 	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
-	bool IsDisruptiveUpgrade;
+	bool IsDisruptiveUpgrade = false;
 };
 
 class UNCConnectionInfo;
@@ -49,11 +46,11 @@ class UNearbyConnectionsBPLibrary : public UBlueprintFunctionLibrary
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
-	static void StartAdvertising(const FNearbyConnectionOptions Options, const FString& UserName, const FString& ServiceId,
+	static void StartAdvertising(const FNCConnectionOptions Options, const FString& UserName, const FString& ServiceId,
 		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
-	static void StartDiscovery(const FNearbyConnectionOptions Options, const FString& ServiceId,
+	static void StartDiscovery(const FNCConnectionOptions Options, const FString& ServiceId,
 		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")

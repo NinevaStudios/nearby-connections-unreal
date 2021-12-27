@@ -15,14 +15,14 @@ FNCStringDelegate UNearbyConnectionsBPLibrary::OnDisconnected;
 FNCEndpointFoundDelegate UNearbyConnectionsBPLibrary::OnEndpointFound;
 FNCStringDelegate UNearbyConnectionsBPLibrary::OnEndpointLost;
 
-void UNearbyConnectionsBPLibrary::StartAdvertising(const FNearbyConnectionOptions Options, const FString& UserName, const FString& ServiceId,
+void UNearbyConnectionsBPLibrary::StartAdvertising(const FNCConnectionOptions Options, const FString& UserName, const FString& ServiceId,
 	const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
 	OnStartAdvertisingSuccess = OnSuccess;
 	OnStartAdvertisingError = OnError;
 }
 
-void UNearbyConnectionsBPLibrary::StartDiscovery(const FNearbyConnectionOptions Options, const FString& ServiceId,
+void UNearbyConnectionsBPLibrary::StartDiscovery(const FNCConnectionOptions Options, const FString& ServiceId,
 	const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
 	OnStartDiscoverySuccess = OnSuccess;
