@@ -2,6 +2,13 @@
 
 #include "NearbyConnectionsBPLibrary.h"
 
+#include "NearbyConnectionsLog.h"
+
+#if PLATFORM_ANDROID
+#include "Android/NCConversionUtils.h"
+#include "Android/NCMethodCallUtils.h"
+#endif
+
 FNCVoidDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingSuccess;
 FNCStringDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingError;
 
@@ -35,6 +42,8 @@ FNCStringDelegate UNearbyConnectionsBPLibrary::OnSendPayloadError;
 
 void UNearbyConnectionsBPLibrary::StartAdvertising(const FNCConnectionOptions& Options, const FString& UserName, const FString& ServiceId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StartAdvertising"));
+
 	OnStartAdvertisingSuccess = OnSuccess;
 	OnStartAdvertisingError = OnError;
 
@@ -45,6 +54,8 @@ void UNearbyConnectionsBPLibrary::StartAdvertising(const FNCConnectionOptions& O
 
 void UNearbyConnectionsBPLibrary::StopAdvertising()
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopAdvertising"));
+
 #if PLATFORM_ANDROID
 
 #endif
@@ -52,6 +63,8 @@ void UNearbyConnectionsBPLibrary::StopAdvertising()
 
 void UNearbyConnectionsBPLibrary::StartDiscovery(const FNCConnectionOptions& Options, const FString& ServiceId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StartDiscovery"));
+
 	OnStartDiscoverySuccess = OnSuccess;
 	OnStartDiscoveryError = OnError;
 
@@ -62,6 +75,8 @@ void UNearbyConnectionsBPLibrary::StartDiscovery(const FNCConnectionOptions& Opt
 
 void UNearbyConnectionsBPLibrary::StopDiscovery()
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopDiscovery"));
+
 #if PLATFORM_ANDROID
 
 #endif
@@ -69,6 +84,8 @@ void UNearbyConnectionsBPLibrary::StopDiscovery()
 
 void UNearbyConnectionsBPLibrary::StopAllEndpoints()
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::StopAllEndpoints"));
+
 #if PLATFORM_ANDROID
 
 #endif
@@ -76,6 +93,8 @@ void UNearbyConnectionsBPLibrary::StopAllEndpoints()
 
 void UNearbyConnectionsBPLibrary::AcceptConnection(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::AcceptConnection"));
+
 	OnAcceptConnectionSuccess = OnSuccess;
 	OnAcceptConnectionError = OnError;
 
@@ -86,6 +105,8 @@ void UNearbyConnectionsBPLibrary::AcceptConnection(const FString& EndpointId, co
 
 void UNearbyConnectionsBPLibrary::CancelPayload(int64 PayloadId)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::CancelPayload"));
+
 #if PLATFORM_ANDROID
 
 #endif
@@ -93,6 +114,8 @@ void UNearbyConnectionsBPLibrary::CancelPayload(int64 PayloadId)
 
 void UNearbyConnectionsBPLibrary::DisconnectFromEndpoint(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::DisconnectFromEndpoint"));
+
 	OnDisconnectFromEndpointSuccess = OnSuccess;
 	OnDisconnectFromEndpointError = OnError;
 
@@ -103,6 +126,8 @@ void UNearbyConnectionsBPLibrary::DisconnectFromEndpoint(const FString& Endpoint
 
 void UNearbyConnectionsBPLibrary::RejectConnection(const FString& EndpointId, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::RejectConnection"));
+
 	OnRejectConnectionSuccess = OnSuccess;
 	OnRejectConnectionError = OnError;
 
@@ -113,6 +138,8 @@ void UNearbyConnectionsBPLibrary::RejectConnection(const FString& EndpointId, co
 
 void UNearbyConnectionsBPLibrary::RequestConnectionByName(const FString& Name, const FString& EndpointId, const FNCConnectionOptions& Options, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::RequestConnectionByName"));
+
 	OnRequestConnectionSuccess = OnSuccess;
 	OnRequestConnectionError = OnError;
 
@@ -123,6 +150,8 @@ void UNearbyConnectionsBPLibrary::RequestConnectionByName(const FString& Name, c
 
 void UNearbyConnectionsBPLibrary::RequestConnection(const TArray<uint8>& EndpointInfo, const FString& EndpointId, const FNCConnectionOptions& Options, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::RequestConnection"));
+
 	OnRequestConnectionSuccess = OnSuccess;
 	OnRequestConnectionError = OnError;
 
@@ -133,6 +162,8 @@ void UNearbyConnectionsBPLibrary::RequestConnection(const TArray<uint8>& Endpoin
 
 void UNearbyConnectionsBPLibrary::SendPayload(UNCPayload* Payload, const TArray<FString>& Endpoints, const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
+	UE_LOG(LogNearbyConnections, Verbose, TEXT("UNearbyConnectionsBPLibrary::SendPayload"));
+
 	OnSendPayloadSuccess = OnSuccess;
 	OnSendPayloadError = OnError;
 
