@@ -4,6 +4,11 @@
 
 #include "NearbyConnectionsLog.h"
 
+#include "Async/Async.h"
+
+#include "NCPayload.h"
+#include "NCConnectionInfo.h"
+
 #if PLATFORM_ANDROID
 #include "Android/NCConversionUtils.h"
 #include "Android/NCMethodCallUtils.h"
@@ -186,3 +191,165 @@ void UNearbyConnectionsBPLibrary::SendPayload(UNCPayload* Payload, const TArray<
 		FJavaWrapper::GameActivityThis, Payload->JavaObject, NCConversionUtils::ToJavaStringArray(Endpoints));
 #endif
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onStartAdvertisingSuccess(JNIEnv* env, jclass clazz)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnStartAdvertisingSuccess.ExecuteIfBound();
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onStartAdvertisingError(JNIEnv* env, jclass clazz, jstring error)
+{
+	FString Error = NCConversionUtils::FromJavaString(error);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnStartAdvertisingError.ExecuteIfBound(Error);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onConnectionInitiated(JNIEnv* env, jclass clazz, jstring endpointId, jobject connectionInfo)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+
+	UNCConnectionInfo* ConnectionInfo = NewObject<UNCConnectionInfo>();
+	ConnectionInfo->Init(connectionInfo);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnConnectionInitiated.ExecuteIfBound(EndpointId, ConnectionInfo);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onConnectionResult(JNIEnv* env, jclass clazz, jstring endpointId, int statusCode, jstring message)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+	FString Message = NCConversionUtils::FromJavaString(message);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnConnectionResult.ExecuteIfBound(EndpointId, statusCode, Message);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onDisconnected(JNIEnv* env, jclass clazz, jstring endpointId)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnDisconnected.ExecuteIfBound(EndpointId);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onStartDiscoverySuccess(JNIEnv* env, jclass clazz)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnStartDiscoverySuccess.ExecuteIfBound();
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onStartDiscoveryError(JNIEnv* env, jclass clazz, jstring error)
+{
+	FString Error = NCConversionUtils::FromJavaString(error);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnStartDiscoveryError.ExecuteIfBound(Error);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onEndpointFound(JNIEnv* env, jclass clazz, jstring endpointId, jstring serviceId, jstring endpointName, jbyteArray endpointInfo)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+	FString ServiceId = NCConversionUtils::FromJavaString(serviceId);
+	FString EndpointName = NCConversionUtils::FromJavaString(endpointName);
+
+	TArray<uint8> EndpointInfo = NCConversionUtils::ConvertToByteArray(endpointInfo);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnEndpointFound.ExecuteIfBound(EndpointId, ServiceId, EndpointName, EndpointInfo);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onEndpointLost(JNIEnv* env, jclass clazz, jstring endpointId)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnEndpointLost.ExecuteIfBound(EndpointId);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onAcceptConnectionSuccess(JNIEnv* env, jclass clazz)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnAcceptConnectionSuccess.ExecuteIfBound();
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onAcceptConnectionError(JNIEnv* env, jclass clazz, jstring error)
+{
+	FString Error = NCConversionUtils::FromJavaString(error);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnAcceptConnectionError.ExecuteIfBound(Error);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onPayloadReceived(JNIEnv* env, jclass clazz, jstring endpointId, jobject payload)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+
+	UNCPayload* Payload = NewObject<UNCPayload>();
+	Payload->Init(payload);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnPayloadReceived.ExecuteIfBound(EndpointId, Payload);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onPayloadTransferUpdate(JNIEnv* env, jclass clazz, jstring endpointId, jobject payloadTransferUpdate)
+{
+	FString EndpointId = NCConversionUtils::FromJavaString(endpointId);
+
+	FNCPayloadTransferUpdate PayloadTransferUpdate;
+	PayloadTransferUpdate.PayloadId = NCMethodCallUtils::CallLongMethod(payloadTransferUpdate, "getPayloadId", "()J");
+	PayloadTransferUpdate.Status = NCMethodCallUtils::CallIntMethod(payloadTransferUpdate, "getStatus", "()I");
+	PayloadTransferUpdate.TotalBytes = NCMethodCallUtils::CallLongMethod(payloadTransferUpdate, "getTotalBytes", "()J");
+	PayloadTransferUpdate.TransferredBytes = NCMethodCallUtils::CallLongMethod(payloadTransferUpdate, "getBytesTransferred", "()J");
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnPayloadTransferUpdate.ExecuteIfBound(EndpointId, PayloadTransferUpdate);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onRequestConnectionSuccess(JNIEnv* env, jclass clazz)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnRequestConnectionSuccess.ExecuteIfBound();
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onRequestConnectionError(JNIEnv* env, jclass clazz, jstring error)
+{
+	FString Error = NCConversionUtils::FromJavaString(error);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnRequestConnectionError.ExecuteIfBound(Error);
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onSendPayloadSuccess(JNIEnv* env, jclass clazz)
+{
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnSendPayloadSuccess.ExecuteIfBound();
+	});
+}
+
+JNI_METHOD void Java_com_ninevastudios_nearbyconnections_NearbyConnections_onSendPayloadError(JNIEnv* env, jclass clazz, jstring error)
+{
+	FString Error = NCConversionUtils::FromJavaString(error);
+
+	AsyncTask(ENamedThreads::GameThread, [=]() {
+		UNearbyConnectionsBPLibrary::OnSendPayloadError.ExecuteIfBound(Error);
+	});
+}
+#endif
