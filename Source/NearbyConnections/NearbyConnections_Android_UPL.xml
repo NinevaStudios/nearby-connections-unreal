@@ -3,7 +3,6 @@
     // Copyright (c) 2022 Nineva Studios
 -->
 <root xmlns:android="http://schemas.android.com/apk/res/android">
-
   <init>
     <log text="[NearbyConnections] Android UPL initialization"/>
   </init>
@@ -89,5 +88,4 @@
       }
     </insert>
   </baseBuildGradleAdditions>
-
 </root>
