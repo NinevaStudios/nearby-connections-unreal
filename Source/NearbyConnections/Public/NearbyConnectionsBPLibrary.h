@@ -6,7 +6,7 @@
 #include "NearbyConnectionsBPLibrary.generated.h"
 
 UENUM()
-enum class ENearbyConnectionsStrategy : uint8
+enum class ENCStrategy : uint8
 {
 	Cluster = 0,
 	PointToPoint = 1,
@@ -19,7 +19,7 @@ struct FNearbyConnectionOptions
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
-	ENearbyConnectionsStrategy Strategy;
+	ENCStrategy Strategy;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
 	bool IsLowPower;
@@ -31,8 +31,15 @@ struct FNearbyConnectionOptions
 	bool IsDisruptiveUpgrade;
 };
 
-DECLARE_DYNAMIC_DELEGATE(FNearbyConnectionsVoidDelegate);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FNearbyConnectionsStringDelegate, FString, String);
+class UNCConnectionInfo;
+
+DECLARE_DYNAMIC_DELEGATE(FNCVoidDelegate);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FNCStringDelegate, FString, String);
+
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FNCConnectionInitiatedDelegate, FString, EndpointId, UNCConnectionInfo*, ConnectionInfo);
+DECLARE_DYNAMIC_DELEGATE_ThreeParams(FNCConnectionResultDelegate, FString, EndpointId, int, StatusCode, FString, Message);
+
+DECLARE_DYNAMIC_DELEGATE_FourParams(FNCEndpointFoundDelegate, FString, EndpointId, FString, ServiceId, FString, EndpointName, const TArray<uint8>&, EndpointInfo);
 
 UCLASS()
 class UNearbyConnectionsBPLibrary : public UBlueprintFunctionLibrary
@@ -43,15 +50,38 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
 	static void StartAdvertising(const FNearbyConnectionOptions Options, const FString& UserName, const FString& ServiceId,
-		const FNearbyConnectionsVoidDelegate& OnSuccess, const FNearbyConnectionsStringDelegate& OnError);
+		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
 
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections", meta = (AutoCreateRefTerm = "OnSuccess,OnError"))
 	static void StartDiscovery(const FNearbyConnectionOptions Options, const FString& ServiceId,
-		const FNearbyConnectionsVoidDelegate& OnSuccess, const FNearbyConnectionsStringDelegate& OnError);
+		const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError);
 
-	static FNearbyConnectionsVoidDelegate OnStartAdvertisingSuccess;
-	static FNearbyConnectionsStringDelegate OnStartAdvertisingError;
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void BindConnectionDelegates(const FNCConnectionInitiatedDelegate& OnConnectionInitiatedCallback, const FNCConnectionResultDelegate& OnConnectionResultCallback,
+		const FNCStringDelegate& OnDisconnectedCallback)
+	{
+		OnConnectionInitiated = OnConnectionInitiatedCallback;
+		OnConnectionResult = OnConnectionResultCallback;
+		OnDisconnected = OnDisconnectedCallback;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	static void BindEndpointDelegates(const FNCEndpointFoundDelegate& OnEndpointFoundCallback, const FNCStringDelegate& OnEndpointLostCallback)
+	{
+		OnEndpointFound = OnEndpointFoundCallback;
+		OnEndpointLost = OnEndpointLostCallback;
+	}
+
+	static FNCVoidDelegate OnStartAdvertisingSuccess;
+	static FNCStringDelegate OnStartAdvertisingError;
 	
-	static FNearbyConnectionsVoidDelegate OnStartDiscoverySuccess;
-	static FNearbyConnectionsStringDelegate OnStartDiscoveryError;
+	static FNCVoidDelegate OnStartDiscoverySuccess;
+	static FNCStringDelegate OnStartDiscoveryError;
+
+	static FNCConnectionInitiatedDelegate OnConnectionInitiated;
+	static FNCConnectionResultDelegate OnConnectionResult;
+	static FNCStringDelegate OnDisconnected;
+
+	static FNCEndpointFoundDelegate OnEndpointFound;
+	static FNCStringDelegate OnEndpointLost;
 };

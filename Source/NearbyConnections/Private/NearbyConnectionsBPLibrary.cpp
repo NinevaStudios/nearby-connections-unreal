@@ -2,23 +2,29 @@
 
 #include "NearbyConnectionsBPLibrary.h"
 
-FNearbyConnectionsVoidDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingSuccess;
-FNearbyConnectionsStringDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingError;
+FNCVoidDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingSuccess;
+FNCStringDelegate UNearbyConnectionsBPLibrary::OnStartAdvertisingError;
 
-FNearbyConnectionsVoidDelegate UNearbyConnectionsBPLibrary::OnStartDiscoverySuccess;
-FNearbyConnectionsStringDelegate UNearbyConnectionsBPLibrary::OnStartDiscoveryError;
+FNCVoidDelegate UNearbyConnectionsBPLibrary::OnStartDiscoverySuccess;
+FNCStringDelegate UNearbyConnectionsBPLibrary::OnStartDiscoveryError;
+
+FNCConnectionInitiatedDelegate UNearbyConnectionsBPLibrary::OnConnectionInitiated;
+FNCConnectionResultDelegate UNearbyConnectionsBPLibrary::OnConnectionResult;
+FNCStringDelegate UNearbyConnectionsBPLibrary::OnDisconnected;
+
+FNCEndpointFoundDelegate UNearbyConnectionsBPLibrary::OnEndpointFound;
+FNCStringDelegate UNearbyConnectionsBPLibrary::OnEndpointLost;
 
 void UNearbyConnectionsBPLibrary::StartAdvertising(const FNearbyConnectionOptions Options, const FString& UserName, const FString& ServiceId,
-	const FNearbyConnectionsVoidDelegate& OnSuccess, const FNearbyConnectionsStringDelegate& OnError)
+	const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
 	OnStartAdvertisingSuccess = OnSuccess;
 	OnStartAdvertisingError = OnError;
 }
 
 void UNearbyConnectionsBPLibrary::StartDiscovery(const FNearbyConnectionOptions Options, const FString& ServiceId,
-	const FNearbyConnectionsVoidDelegate& OnSuccess, const FNearbyConnectionsStringDelegate& OnError)
+	const FNCVoidDelegate& OnSuccess, const FNCStringDelegate& OnError)
 {
 	OnStartDiscoverySuccess = OnSuccess;
 	OnStartDiscoveryError = OnError;
 }
-
