@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Nineva Studios
 
 #include "NearbyConnections.h"
+#include "NearbyConnectionsLog.h"
 
 #define LOCTEXT_NAMESPACE "FNearbyConnectionsModule"
 
@@ -18,5 +19,7 @@ void FNearbyConnectionsModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
+
+DEFINE_LOG_CATEGORY(LogNearbyConnections);
 	
 IMPLEMENT_MODULE(FNearbyConnectionsModule, NearbyConnections)
