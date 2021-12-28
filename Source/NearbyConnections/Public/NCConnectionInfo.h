@@ -19,6 +19,21 @@ public:
 
 	virtual ~UNCConnectionInfo();
 
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	FString GetEndpointName();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	FString GetAuthenticationDigits();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	TArray<uint8> GetRawAuthenticationToken();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	bool IsIncomingConnection();
+
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections")
+	TArray<uint8> GetEndpointInfo();
+
 	/**
 	 * Convenience function to check whether the native object is valid.
 	 */

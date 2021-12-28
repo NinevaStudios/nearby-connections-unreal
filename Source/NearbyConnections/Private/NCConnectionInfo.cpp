@@ -23,6 +23,86 @@ UNCConnectionInfo::~UNCConnectionInfo()
 #endif
 }
 
+FString UNCConnectionInfo::GetEndpointName()
+{
+	FString Result;
+
+	if (!IsNativeObjectValid())
+		return Result;
+
+#if PLATFORM_ANDROID
+	Result = NCMethodCallUtils::CallStringMethod(JavaObject, "getEndpointName", "()Ljava/lang/String;");
+#endif
+
+	return Result;
+}
+
+FString UNCConnectionInfo::GetAuthenticationDigits()
+{
+	FString Result;
+
+	if (!IsNativeObjectValid())
+		return Result;
+
+#if PLATFORM_ANDROID
+	Result = NCMethodCallUtils::CallStringMethod(JavaObject, "getAuthenticationDigits", "()Ljava/lang/String;");
+#endif
+
+	return Result;
+}
+
+TArray<uint8> UNCConnectionInfo::GetRawAuthenticationToken()
+{
+	TArray<uint8> Result;
+
+	if (!IsNativeObjectValid())
+		return Result;
+
+#if PLATFORM_ANDROID
+	jbyteArray javaBytes = static_cast<jbyteArray>(NCMethodCallUtils::CallObjectMethod(JavaObject, "getRawAuthenticationToken", "()[B"));
+
+	if (javaBytes == nullptr)
+		return Result;
+
+	Result = NCConversionUtils::ConvertToByteArray(javaBytes);
+#endif
+
+	return Result;
+}
+
+bool UNCConnectionInfo::IsIncomingConnection()
+{
+	bool Result = false;
+
+	if (!IsNativeObjectValid())
+		return Result;
+
+#if PLATFORM_ANDROID
+	Result = NCMethodCallUtils::CallBoolMethod(JavaObject, "isIncomingConnection", "()Z");
+#endif
+
+	return Result;
+}
+
+TArray<uint8> UNCConnectionInfo::GetEndpointInfo()
+{
+	TArray<uint8> Result;
+
+	if (!IsNativeObjectValid())
+		return Result;
+
+#if PLATFORM_ANDROID
+	jbyteArray javaBytes = static_cast<jbyteArray>(NCMethodCallUtils::CallObjectMethod(JavaObject, "getEndpointInfo", "()[B"));
+
+	if (javaBytes == nullptr)
+		return Result;
+
+	Result = NCConversionUtils::ConvertToByteArray(javaBytes);
+#endif
+
+	return Result;
+}
+
 bool UNCConnectionInfo::IsNativeObjectValid()
 {
 	bool Result = false;
