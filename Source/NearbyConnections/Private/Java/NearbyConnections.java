@@ -3,6 +3,7 @@
 package com.ninevastudios.nearbyconnections;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 @SuppressWarnings("unused")
@@ -197,6 +200,32 @@ public class NearbyConnections {
 						onSendPayloadError(e.getMessage());
 					}
 				});
+	}
+
+	public static Payload payloadFromBytes(byte[] bytes) {
+		return Payload.fromBytes(bytes);
+	}
+
+	public static Payload payloadFromFile(String path) {
+		try {
+			File file = new File(path);
+			return Payload.fromFile(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static String getPayloadFilePath(Payload payload) {
+		Payload.File file = payload.asFile();
+		if (file == null)
+			return "";
+
+		Uri uri = file.asUri();
+		if (uri == null)
+			return "";
+
+		return uri.getPath();
 	}
 
 	static ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
