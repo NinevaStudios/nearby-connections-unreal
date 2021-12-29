@@ -48,9 +48,9 @@
   <!-- optional additions to proguard -->
   <proguardAdditions>
     <insert>
-      -dontwarn com.ninevastudios.**
-      -keep class com.ninevastudios.** { *; }
-      -keep interface com.ninevastudios.** { *; }
+      -dontwarn com.ninevastudios.nearbyconnections.**
+      -keep class com.ninevastudios.nearbyconnections.** { *; }
+      -keep interface com.ninevastudios.nearbyconnections.** { *; }
 
       -keep class com.google.android.gms.nearby.** { *; }
       -keep interface com.google.android.gms.nearby.** { *; }

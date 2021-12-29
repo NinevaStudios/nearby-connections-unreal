@@ -228,6 +228,10 @@ public class NearbyConnections {
 		return uri.getPath();
 	}
 
+	public static Options createOptions(int strategyInt, boolean isLowPower, boolean isDisruptiveUpgrade) {
+		return new Options(strategyInt, isLowPower, isDisruptiveUpgrade);
+	}
+
 	static ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
 		@Override
 		public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {

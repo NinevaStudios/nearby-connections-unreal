@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Nineva Studios
 
 #include "NCConversionUtils.h"
+#include "NCMethodCallUtils.h"
 
 namespace NCConversionUtils
 {
@@ -96,10 +97,7 @@ namespace NCConversionUtils
 
 	jobject ToJavaOptions(const FNCConnectionOptions& Options)
 	{
-		JNIEnv* Env = AndroidJavaEnv::GetJavaEnv();
-
-		jclass OptionsClass = FJavaWrapper::FindClass(Env, "com/ninevastudios/nearbyconnections/Options", false);
-		jmethodID OptionsCtor = FJavaWrapper::FindMethod(Env, OptionsClass, "<init>", "(IZZ)V", false);
-		return Env->NewObject(OptionsClass, OptionsCtor, (int)Options.Strategy, Options.IsLowPower, Options.IsDisruptiveUpgrade);
+		return NCMethodCallUtils::CallStaticObjectMethod(UNearbyConnectionsBPLibrary::NearbyConnectionsClassName, "createOptions", 
+			"(IZZ)Lcom/ninevastudios/nearbyconnections/Options;", (int) Options.Strategy, Options.IsLowPower, Options.IsDisruptiveUpgrade);
 	}
 }
