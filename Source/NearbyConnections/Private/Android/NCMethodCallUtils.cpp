@@ -5,269 +5,272 @@
 
 #include "Android/AndroidJava.h"
 
-FString NCMethodCallUtils::CallStaticStringMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+namespace NCMethodCallUtils
 {
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticStringMethod [%s]"), *FString(MethodName));
+	FString CallStaticStringMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticStringMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	jstring Return = static_cast<jstring>(Env->CallStaticObjectMethodV(Class, Method, Args));
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		jstring Return = static_cast<jstring>(Env->CallStaticObjectMethodV(Class, Method, Args));
+		va_end(Args);
 
-	const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
-	FString Result(UTF8_TO_TCHAR(UTFString));
-	Env->ReleaseStringUTFChars(Return, UTFString);
+		const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
+		FString Result(UTF8_TO_TCHAR(UTFString));
+		Env->ReleaseStringUTFChars(Return, UTFString);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-bool NCMethodCallUtils::CallStaticBoolMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticBoolMethod [%s]"), *FString(MethodName));
+	bool CallStaticBoolMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticBoolMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	bool Result = Env->CallStaticBooleanMethodV(Class, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		bool Result = Env->CallStaticBooleanMethodV(Class, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-int NCMethodCallUtils::CallStaticIntMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticIntMethod [%s]"), *FString(MethodName));
+	int CallStaticIntMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticIntMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	int Result = Env->CallStaticIntMethodV(Class, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		int Result = Env->CallStaticIntMethodV(Class, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-long NCMethodCallUtils::CallStaticLongMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticIntMethod [%s]"), *FString(MethodName));
+	long CallStaticLongMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticIntMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	long Result = Env->CallStaticLongMethodV(Class, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		long Result = Env->CallStaticLongMethodV(Class, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-jobject NCMethodCallUtils::CallStaticObjectMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticObjectMethod [%s]"), *FString(MethodName));
+	jobject CallStaticObjectMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticObjectMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	jobject Result = Env->CallStaticObjectMethodV(Class, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		jobject Result = Env->CallStaticObjectMethodV(Class, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-void NCMethodCallUtils::CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticVoidMethod [%s]"), *FString(MethodName));
+	void CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStaticVoidMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
 
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	Env->CallStaticVoidMethodV(Class, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		Env->CallStaticVoidMethodV(Class, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
-}
+		Env->DeleteLocalRef(Class);
+	}
 
-FString NCMethodCallUtils::CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStringMethod [%s]"), *FString(MethodName));
+	FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallStringMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	jstring Return = static_cast<jstring>(Env->CallObjectMethodV(object, Method, Args));
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		jstring Return = static_cast<jstring>(Env->CallObjectMethodV(object, Method, Args));
+		va_end(Args);
 
-	const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
-	FString Result(UTF8_TO_TCHAR(UTFString));
-	Env->ReleaseStringUTFChars(Return, UTFString);
+		const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
+		FString Result(UTF8_TO_TCHAR(UTFString));
+		Env->ReleaseStringUTFChars(Return, UTFString);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-bool NCMethodCallUtils::CallBoolMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallBoolMethod [%s]"), *FString(MethodName));
+	bool CallBoolMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallBoolMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	bool Result = Env->CallBooleanMethodV(object, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		bool Result = Env->CallBooleanMethodV(object, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-int NCMethodCallUtils::CallIntMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallIntMethod [%s]"), *FString(MethodName));
+	int CallIntMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallIntMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	int Result = Env->CallIntMethodV(object, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		int Result = Env->CallIntMethodV(object, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
-jobject NCMethodCallUtils::CallObjectMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallObjectMethod [%s]"), *FString(MethodName));
+		return Result;
+	}
+	jobject CallObjectMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallObjectMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	jobject Result = Env->CallObjectMethodV(object, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		jobject Result = Env->CallObjectMethodV(object, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
-}
+		return Result;
+	}
 
-void NCMethodCallUtils::CallVoidMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallVoidMethod [%s]"), *FString(MethodName));
+	void CallVoidMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallVoidMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	Env->CallVoidMethodV(object, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		Env->CallVoidMethodV(object, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
-}
+		Env->DeleteLocalRef(Class);
+	}
 
-long NCMethodCallUtils::CallLongMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallLongMethod [%s]"), *FString(MethodName));
+	long CallLongMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		UE_LOG(LogNearbyConnections, Verbose, TEXT("Method call CallLongMethod [%s]"), *FString(MethodName));
 
-	bool bIsOptional = false;
+		bool bIsOptional = false;
 
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jclass Class = Env->GetObjectClass(object);
+		jclass Class = Env->GetObjectClass(object);
 
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
 
-	va_list Args;
-	va_start(Args, MethodSignature);
-	long Result = Env->CallLongMethodV(object, Method, Args);
-	va_end(Args);
+		va_list Args;
+		va_start(Args, MethodSignature);
+		long Result = Env->CallLongMethodV(object, Method, Args);
+		va_end(Args);
 
-	Env->DeleteLocalRef(Class);
+		Env->DeleteLocalRef(Class);
 
-	return Result;
+		return Result;
+	}
 }

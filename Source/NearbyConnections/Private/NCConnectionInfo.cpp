@@ -5,8 +5,8 @@
 #include "NearbyConnectionsLog.h"
 
 #if PLATFORM_ANDROID
-#include "Android/Utils/MGJavaConvertor.h"
-#include "Android/Utils/NCMethodCallUtils.h"
+#include "Android/NCConversionUtils.h"
+#include "Android/NCMethodCallUtils.h"
 #endif
 
 UNCConnectionInfo::~UNCConnectionInfo()
@@ -120,7 +120,7 @@ bool UNCConnectionInfo::IsNativeObjectValid()
 }
 
 #if PLATFORM_ANDROID
-void UMGAndroidWrapperObject::Init(jobject javaObject)
+void UNCConnectionInfo::Init(jobject javaObject)
 {
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 	JavaObject = Env->NewGlobalRef(javaObject);

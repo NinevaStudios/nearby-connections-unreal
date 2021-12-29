@@ -7,8 +7,8 @@
 #include "NearbyConnectionsBPLibrary.h"
 
 #if PLATFORM_ANDROID
-#include "Android/Utils/NCConversionUtils.h"
-#include "Android/Utils/NCMethodCallUtils.h"
+#include "Android/NCConversionUtils.h"
+#include "Android/NCMethodCallUtils.h"
 #endif
 
 UNCPayload::~UNCPayload()
@@ -176,7 +176,7 @@ bool UNCPayload::IsNativeObjectValid()
 }
 
 #if PLATFORM_ANDROID
-void UMGAndroidWrapperObject::Init(jobject javaObject)
+void UNCPayload::Init(jobject javaObject)
 {
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 	JavaObject = Env->NewGlobalRef(javaObject);
