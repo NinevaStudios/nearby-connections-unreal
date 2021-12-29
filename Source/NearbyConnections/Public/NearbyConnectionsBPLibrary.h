@@ -18,13 +18,13 @@ struct FNCConnectionOptions
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	UPROPERTY(BlueprintReadWrite, Category = "Nearby Connections")
 	ENCStrategy Strategy;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	UPROPERTY(BlueprintReadWrite, Category = "Nearby Connections")
 	bool IsLowPower = false;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Nearby Connections")
+	UPROPERTY(BlueprintReadWrite, Category = "Nearby Connections")
 	bool IsDisruptiveUpgrade = false;
 };
 
