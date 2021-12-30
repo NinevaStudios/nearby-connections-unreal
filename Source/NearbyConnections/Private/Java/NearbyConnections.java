@@ -2,8 +2,11 @@
 
 package com.ninevastudios.nearbyconnections;
 
+import static com.google.android.gms.common.util.IOUtils.copyStream;
+
 import android.app.Activity;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,7 +28,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class NearbyConnections {
@@ -206,9 +213,10 @@ public class NearbyConnections {
 		return Payload.fromBytes(bytes);
 	}
 
-	public static Payload payloadFromFile(String path) {
+	public static Payload payloadFromFile(Activity context, String path) {
 		try {
 			File file = new File(path);
+			ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(Uri.fromFile(file), "r");
 			return Payload.fromFile(file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -216,16 +224,24 @@ public class NearbyConnections {
 		}
 	}
 
-	public static String getPayloadFilePath(Payload payload) {
+	public static String getPayloadFilePath(Activity context, Payload payload) {
 		Payload.File file = payload.asFile();
-		if (file == null)
+		if (file == null) {
+			Log.d(TAG, "Payload does not contain file path. Returning empty string.");
 			return "";
-
+		}
 		Uri uri = file.asUri();
-		if (uri == null)
+		File result = new File(context.getCacheDir(), UUID.randomUUID().toString());
+		try {
+			InputStream in = context.getContentResolver().openInputStream(uri);
+			copyStream(in, new FileOutputStream(result));
+			return file.toString();
+		} catch (IOException e) {
+			Log.e(TAG, "getPayloadFilePath: ", e);
 			return "";
-
-		return uri.getPath();
+		} finally {
+			context.getContentResolver().delete(uri, null, null);
+		}
 	}
 
 	public static Options createOptions(int strategyInt, boolean isLowPower, boolean isDisruptiveUpgrade) {

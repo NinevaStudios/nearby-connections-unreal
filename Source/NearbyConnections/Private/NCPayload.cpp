@@ -45,7 +45,7 @@ UNCPayload* UNCPayload::PayloadFromFile(const FString& Path)
 
 #if PLATFORM_ANDROID
 	jobject javaPayload = NCMethodCallUtils::CallStaticObjectMethod(UNearbyConnectionsBPLibrary::NearbyConnectionsClassName, "payloadFromFile",
-		"(Ljava/lang/String;)Lcom/google/android/gms/nearby/connection/Payload;", NCConversionUtils::GetJavaString(Path));
+		"(Landroid/app/Activity;Ljava/lang/String;)Lcom/google/android/gms/nearby/connection/Payload;", FJavaWrapper::GameActivityThis, NCConversionUtils::GetJavaString(Path));
 
 	Payload->Init(javaPayload);
 #endif
@@ -109,7 +109,7 @@ FString UNCPayload::GetFilePath()
 
 #if PLATFORM_ANDROID
 	Result = NCMethodCallUtils::CallStaticStringMethod(UNearbyConnectionsBPLibrary::NearbyConnectionsClassName, "getPayloadFilePath", 
-		"(Lcom/google/android/gms/nearby/connection/Payload;)Ljava/lang/String;", JavaObject);
+		"(Landroid/app/Activity;Lcom/google/android/gms/nearby/connection/Payload;)Ljava/lang/String;", FJavaWrapper::GameActivityThis, JavaObject);
 #endif
 
 	return Result;
