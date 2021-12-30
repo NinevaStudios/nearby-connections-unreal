@@ -235,17 +235,20 @@ public class NearbyConnections {
 	static ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
 		@Override
 		public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
+			Log.d(TAG, "onConnectionInitiated");
 			NearbyConnections.onConnectionInitiated(endpointId, connectionInfo);
 		}
 
 		@Override
 		public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution connectionResolution) {
+			Log.d(TAG, "onConnectionResult");
 			Status status = connectionResolution.getStatus();
 			NearbyConnections.onConnectionResult(endpointId, status.getStatusCode(), status.getStatusMessage());
 		}
 
 		@Override
 		public void onDisconnected(@NonNull String endpointId) {
+			Log.d(TAG, "onDisconnected");
 			NearbyConnections.onDisconnected(endpointId);
 		}
 	};
