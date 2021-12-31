@@ -23,4 +23,18 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Nearby Connections|Demo")
 	static TArray<uint8> BytesFromString(const FString& String);
+
+	/**
+	* Helper function to save random FGuid as text file.
+	* 
+	* @return Path of the file.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections|Demo")
+	static FString GenerateAndSaveTextFile();
+
+	/**
+	* Helper function to read text file contents.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Nearby Connections|Demo")
+	static FString ReadTextFile(const FString& Path);
 };

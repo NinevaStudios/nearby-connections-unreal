@@ -235,7 +235,7 @@ public class NearbyConnections {
 		try {
 			InputStream in = context.getContentResolver().openInputStream(uri);
 			copyStream(in, new FileOutputStream(result));
-			return file.toString();
+			return result.getAbsolutePath();
 		} catch (IOException e) {
 			Log.e(TAG, "getPayloadFilePath: ", e);
 			return "";
