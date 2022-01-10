@@ -7,6 +7,7 @@
 #include "HAL/UnrealMemory.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
 
 FString UNCDemo::StringFromBytes(const TArray<uint8>& Bytes)
 {
