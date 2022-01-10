@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 2000000,
-	"VersionName": "1.0.0",
+	"Version": 1000100,
+	"VersionName": "1.0.1",
 	"FriendlyName": "NearbyConnections",
 	"Description": "Google Nearby Connections API plugin for Unreal Engine",
 	"Category": "Code Plugins",
