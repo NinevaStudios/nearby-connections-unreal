@@ -8,7 +8,7 @@
 	"CreatedBy": "Nineva Studios",
 	"CreatedByURL": "https://ninevastudios.com/",
 	"DocsURL": "https://docs.ninevastudios.com/#/ue-plugins/google-play-unreal",
-	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/ed6dc1c7026b4e3fbcbacf51298b17a0",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/530f043668784c409401c8fe8c5ea119",
 	"EngineVersion": "4.25.0",
 	"SupportURL": "mailto:support@ninevastudios.com",
 	"CanContainContent": true,
@@ -19,7 +19,7 @@
 			"Name": "NearbyConnections",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [ "Win64", "Win32", "Mac", "Android" ]
+			"WhitelistPlatforms": [ "Win64", "Mac", "Android" ]
 		}
 	]
 }
