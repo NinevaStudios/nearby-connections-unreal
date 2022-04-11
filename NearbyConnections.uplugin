@@ -9,7 +9,7 @@
 	"CreatedByURL": "https://ninevastudios.com/",
 	"DocsURL": "https://docs.ninevastudios.com/#/ue-plugins/google-play-unreal",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/530f043668784c409401c8fe8c5ea119",
-	"EngineVersion": "4.25.0",
+	"EngineVersion": "4.26.0",
 	"SupportURL": "mailto:support@ninevastudios.com",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
